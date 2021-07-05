@@ -1,0 +1,22 @@
+#!/bin/sh
+
+tty_wrap()
+{
+    # fmt reads text on stdin
+
+    # Wrap to 80 characters by default
+    if ! TTY_COLS=$(tput cols); then
+        TTY_COLS=80
+    fi
+
+    # Aim for 5 columns less than the maximum
+    TTY_COLS_GOAL=$(( TTY_COLS - 5 ))
+
+    # Handle the different fmt implementations
+
+    if [ "$(uname)" = Darwin ]; then
+        fmt -p "${TTY_COLS_GOAL}" "${TTY_COLS}"
+    else
+        fmt --goal="${TTY_COLS_GOAL}" --width="${TTY_COLS}"
+    fi
+}
